@@ -16,7 +16,9 @@ int main() {
     
     switch(x){
         case 1:         // encryption of a message with a rotation cipher given message and rotation amount
-            printf("1\n");
+            FILE *input;
+            input = fopen("decryptedMessage", "r");
+            
             break;
             
         case 2:         // Decryption of a message encrypted with a rotation cipher given cipher text and rotation amount
