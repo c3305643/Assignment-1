@@ -15,7 +15,7 @@ int scipherDto();   // Decryption of a message encrypted with a substitution cip
     
 int main() {
     
-    int x = 3, k = 5;
+    int x = 4, k = 5;
     
     // use the terminal to input a value for x and k or change the value in the code
     
@@ -312,8 +312,9 @@ int scipherE(){
 	        }	        
 	    }
 	    
-	    fprintf(output, "%c", str2[x]);
+	    
 	    printf("%c", str2[x]);
+	    fprintf(output, "%c", str2[x]);
 	}
 	
 	fclose(output);
@@ -324,7 +325,89 @@ int scipherE(){
 
 int scipherD(){
     
-    printf("neg");
+    FILE *key;
+    key = fopen("subKey.txt", "r");
+    
+    int x = 0;
+    char str[26];
+    char c;
+    
+    printf("the key is: ");
+    for (x = 0; x < 26; x++){
+        
+        fscanf(key, "%c", &c);
+        str[x] = c;
+        printf("%c", str[x]);
+        
+    }
+    
+    fclose(key);
+    
+    FILE *size;        // to initially find the size the array needs to be
+	                   // store decrypted message in "decryptedMessage.txt" for encrypting
+	size = fopen("encryptedMessage.txt", "r");
+	
+	x = 0;
+	
+	while (feof(size) == 0){    
+	    
+    	fscanf(size, "%c", &c);
+        
+	    x++;
+	}
+	
+	fclose(size);
+
+    FILE *input;        // write the file to an array
+    
+	input = fopen("encryptedMessage.txt", "r");
+	
+    char str2[x];
+    int s = x-1;
+    x = 0;
+    printf("\n");
+    printf("input: ");
+    while (feof(input) == 0){
+	    
+	    
+    	fscanf(input, "%c", &c);
+    	
+    	str2[x] = c;
+    	str2[s] = '\0';
+    	
+        printf("%c", str2[x]);
+
+	    x++;
+	}
+	
+	fclose(input);
+	
+	int b;
+	
+	printf("\n");
+	
+	FILE *output;
+	output = fopen("decryptedMessage.txt", "w");
+	
+	printf("output: ");
+	
+	for (x = 0; x < s; x++){
+	    
+	    for(b = 0; b < 26; b++){
+	        
+	        if (str[b] == str2[x]){
+	            str2[x] = b + 65;
+	            break;
+	        }	        
+	    }
+	    
+	    
+	    printf("%c", str2[x]);
+	    fprintf(output, "%c", str2[x]);
+	}
+	
+	fclose(output);
+    
     
     
     return 0;
