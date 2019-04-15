@@ -15,9 +15,9 @@ int scipherDto();   // Decryption of a message encrypted with a substitution cip
     
 int main() {
     
-    int x = 1;
+    int x = 1, k = 5;
     
-    // use the terminal to input a value for x or change the value in the code
+    // use the terminal to input a value for x and k or change the value in the code
     
     printf("CHOOSE DESIRED OPTION:\n");
     printf("1. Encrypt a message with a rotation cipher given the message and rotation amount\n");
@@ -28,12 +28,13 @@ int main() {
     printf("6. Decrypt a message encrypted with a substitution cipher given cipher text only\n");
     scanf("%d", &x);
     
-    
+    printf("rotation amount for rotation cipher: \n");
+    scanf("%d", &k);
     
     switch(x){
         case 1:         // encryption of a message with a rotation cipher given message and rotation amount
             
-            rcipherE();
+            rcipherE(k);
             
             
             break;
@@ -73,7 +74,7 @@ int main() {
     return 0;
 }
 
-int rcipherE(){
+int rcipherE(int k){
     
     FILE *size;        // to initially find the size the array needs to be
 	                   // store decrypted message in "decryptedMessage.txt" for encrypting
@@ -120,10 +121,9 @@ int rcipherE(){
 	
 	x = 0;
 	
-	int k = 5;
-	printf("rotate by: \n");
-	scanf("%d\n", &k);
-	    
+	FILE *output;
+	output = fopen("encryptedMessage.txt", "w");   
+	
 	for (x = 0; x < s; x++){
 	    
 	    
@@ -143,12 +143,12 @@ int rcipherE(){
 	        
 	    }
 	    
-	    printf("%c", str[x]);
+	    fprintf(output, "%c", str[x]);
 	    
 	}
 	
+	fclose(output);
 	
-    
     return 0; 
     
 }
