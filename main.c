@@ -15,309 +15,315 @@ int scipherDto();   // Decryption of a message encrypted with a substitution cip
     
 int main() {
     
-    int x = 4, k = 5;
+    int x = 1, k = 1;   // x is used as a selection variable for the menu, k is the rotation amount
     
-    // use the terminal to input a value for x and k or change the value in the code
-    
-    printf("CHOOSE DESIRED OPTION:\n");
+    // ******use the terminal to input a value for x and k or change the value in the code******
+    // message tells user to place the required message in the correct file for encryption of decryption
+    printf("...before continuing, make sure the message you want to encrypt is in decryptedMessage.txt,\n or alternatively if you want to decrpyt a message, place it in encryptedMessage.txt\n");
+    printf("\n");
+    printf("CHOOSE DESIRED OPTION:\n");     // prints user menu to the terminal
     printf("1. Encrypt a message with a rotation cipher given the message and rotation amount\n");
     printf("2. Decrypt a message encrypted with a rotation cipher given cipher text and rotation amount\n");
     printf("3. Encrypt a message with a substitution cipher given message text and alphabet substitution\n");
     printf("4. Decrypt a message encrypted with a substitution cipher given cipher text and substitutions\n");
     printf("5. Decrypt a message encrypted with a rotation cipher given cipher text only\n");
     printf("6. Decrypt a message encrypted with a substitution cipher given cipher text only\n");
-    scanf("%d", &x);
+    scanf("%d", &x);        // reads users menu choice
     
-    if (x == 2 || x == 1){
-        printf("rotation amount for rotation cipher: \n");
+    if (x == 2 || x == 1){  // if x is 1 or 2, the terminal will ask for rotation amount for the rotation cipher
+        printf("rotation amount for rotation cipher: ");
         scanf("%d", &k);
+        printf("%d\n", k);  // show user the rotation amount
     }
-    else if (x == 4 || x == 3){
+    else if (x == 4 || x == 3){   // if x is 3 or 4, the terminal will ask to place the substitution key into the file "subKey.txt"
         printf("Write subsitution key into subKey.txt file in the form ABCDEFGHILKLMNOPQRSTUVWXYZ\n");
     }
     
     
     switch(x){
-        case 1:         // encryption of a message with a rotation cipher given message and rotation amount
+        case 1:             // encryption of a message with a rotation cipher given message and rotation amount
             
             rcipherE(k);
             
             
             break;
             
-        case 2:         // Decryption of a message encrypted with a rotation cipher given cipher text and rotation amount
+        case 2:             // Decryption of a message encrypted with a rotation cipher given cipher text and rotation amount
             
             rcipherD(k);
             
             break;
             
-        case 3:         // Encryption of a message with a substitution cipher given message text and alphabet substitution
+        case 3:             // Encryption of a message with a substitution cipher given message text and alphabet substitution
             
             scipherE();
             
             break;
             
-        case 4:         // Decryption of a message encrypted with a substitution cipher given cipher text and substitutions
+        case 4:             // Decryption of a message encrypted with a substitution cipher given cipher text and substitutions
             
             scipherD();
             
             break;
             
-        case 5:         // Decryption of a message encrypted with a rotation cipher given cipher text only
+        case 5:             // Decryption of a message encrypted with a rotation cipher given cipher text only
             
             rcipherDto();
             
             break;
             
-        case 6:         // Decryption of a message encrypted with a substitution cipher given cipher text only
+        case 6:             // Decryption of a message encrypted with a substitution cipher given cipher text only
             
             scipherDto();
             
             break;
         default: 
-            printf("no option was selected\n");
+            printf("no option was selected\n");        // if x does not = 1 to 6 then the terminal will tell the user that no option was selected
     }
     return 0;
 }
 
 int rcipherE(int k){
     
-    FILE *size;        // to initially find the size the array needs to be
-	                   // store decrypted message in "decryptedMessage.txt" for encrypting
+    FILE *size;         // to initially find the size the array needs to be
+	                    // store decrypted message in "decryptedMessage.txt" for encrypting
 	size = fopen("decryptedMessage.txt", "r");
 
-	int x = 0;
-	char c;
+	int x = 0;         // count variable
+	char c;            // varible for scanning character in loop
 	
 	while (feof(size) == 0){    
 	    
-    	fscanf(size, "%c", &c);
+    	fscanf(size, "%c", &c);    // scan character from file 
         
-	    x++;
+	    x++;           // loop cycles through the file counting each character in the file
 	}
 	
-	fclose(size);
+	fclose(size);      // close file
 
-    FILE *input;        // write the file to an array
+    FILE *input;       // open file to place contents into a string
     
-	input = fopen("decryptedMessage.txt", "r");
+	input = fopen("decryptedMessage.txt", "r");     // open file
 	
-    char str[x];
-    int s = x-1;
+    char str[x];                    // array for string 
+    int s = x-1;                    // variable for the last character in the. x - 1 is used so the NULL character isnt considered 
     x = 0;
     
-    while (feof(input) == 0){
+    printf("Input Message: ");             //print users input message from file
+    
+    for (x = 0; x < s; x++){               // loop for changing lower case to upper case
 	    
 	    
-    	fscanf(input, "%c", &c);
+    	fscanf(input, "%c", &c);           // scan from file and write to c
+    	printf("%c", c);                   // print character to terminal which will in the end print the full message
     	
-    	str[x] = c;
     	
-    	if(str[x] > 96 && str[x] < 123){
+    	str[x] = c;                        // place c into the x position of the string
+    	
+    	if(str[x] > 96 && str[x] < 123){   // if the character is lower case i.e. ascii value between 97 and 122
             
-    	    str[x] = c - 32;
-            str[s] = '\0';
-              
+    	    str[x] = str[x] - 32;          // make the character upper case by minusing the ascii value by 32
+                          
     	}
-        
-	    x++;
+        	   
 	}
 	
-	fclose(input);
+	fclose(input);                         // close file
 	
-	x = 0;
+	printf("\n");                          // new line                       
 	
-	FILE *output;
-	output = fopen("encryptedMessage.txt", "w");   
+	FILE *output;                          // file for writing 
+	output = fopen("encryptedMessage.txt", "w");   // open file for writing
 	
-	for (x = 0; x < s; x++){
+	printf("Encrpyted Message: ");         // terminal prints the encrypted message
+	
+	for (x = 0; x < s; x++){               // loop for string
 	    
 	    
 	    
-	    if (str[x] > 64 && str[x] < 91){
+	    if (str[x] > 64 && str[x] < 91){   // only includes letters
 	        
-	        if (str[x] + k < 91){
-	            
-	            str[x] = str[x] + k;
+	        if (str[x] + k < 91){          // if rotation + character doesnt go past z
+	        
+	            str[x] = str[x] + k;       // character = character - rotation
 	        }
-	        else if(str[x] + k > 90){
+	        
+	        else if(str[x] + k > 90){      // if rotation + character does go past z, use remainer + 52 to bring it back into the A - Z range
 	           
-	           str[x] = ((str[x] + k) % 26) + 52;
+	           str[x] = ((str[x] + k) % 26) + 52;  // remainder of character + rotation + 52
 	           
 	        }	        
 	        
 	    }
 	    
-	    fprintf(output, "%c", str[x]);
-	    
+	    fprintf(output, "%c", str[x]);     // print encrypted character to file
+	    printf("%c", str[x]);              // print encrypted character to terminal
 	}
 	
-	fclose(output);
+	fclose(output);                        // close file
 	
-    return 0; 
-    
+    return 0;     
 }
 
-int rcipherD(int k){
+int rcipherD(int k){   
     
-    FILE *size;        // to initially find the size the array needs to be
-	                   // store decrypted message in "decryptedMessage.txt" for encrypting
-	size = fopen("encryptedMessage.txt", "r");
+    FILE *size;                            // to initially find the size the array needs to be
+	                                       // store decrypted message in "decryptedMessage.txt" for encrypting
+	size = fopen("encryptedMessage.txt", "r");     // open file
 
-	int x = 0;
-	char c;
+	int x = 0;                             // count variable
+	char c;                                // character variable
 	
-	while (feof(size) == 0){    
+	while (feof(size) == 0){               // loop for finding size of file
 	    
-    	fscanf(size, "%c", &c);
+    	fscanf(size, "%c", &c);            // scan character from file to 'c'
         
-	    x++;
+	    x++;                               // count
 	}
 	
-	fclose(size);
+	fclose(size);                          // close file
 
-    FILE *input;        // write the file to an array
+    FILE *input;                           // write the file to an array
     
-	input = fopen("encryptedMessage.txt", "r");
+	input = fopen("encryptedMessage.txt", "r");    // open file
 	
-    char str[x];
-    int s = x-1;
+    char str[x];                           // array for string
+    int s = x-1;                           // last character for loop
     x = 0;
     
-    while (feof(input) == 0){
+    printf("Input Message: ");
+    
+    for (x = 0; x < s; x++){               // loop for writing file to a string
 	    
 	    
-    	fscanf(input, "%c", &c);
-    	
-    	str[x] = c;
-        str[s] = '\0';
+    	fscanf(input, "%c", &c);           // scan file character to c
+        str[x] = c;                        // declare x position character in string to be c
+        printf("%c", str[x]);              // print input character to terminal to show input message
               
-    	
-        
-	    x++;
 	}
 	
-	fclose(input);
+	fclose(input);                         // close         
 	
-	x = 0;
+	printf("\n");
 	
-	FILE *output;
-	output = fopen("decryptedMessage.txt", "w");   
+	FILE *output;                          // open file for output
+	output = fopen("decryptedMessage.txt", "w");   // open file
 	
-	for (x = 0; x < s; x++){
+	printf("Decrypted Message: ");
+	
+	for (x = 0; x < s; x++){               // loop for decrypting text
 	    
 	    
 	    
-	    if (str[x] > 64 && str[x] < 91){
+	    if (str[x] > 64 && str[x] < 91){   // ignore unless character is A - Z
 	        
-	        if (str[x] - k > 64){
-                str[x] = str[x] - k;
+	        if (str[x] - k > 64){          // if character - rotation >= 'A'
+                str[x] = str[x] - k;       // decrypted character = encrypted character - rotation
                 
             }
-            else if(x - k < 65){
-                str[x] = ((str[x] - k) % 26) + 78;               
+            else if(x - k < 65){           // if character - rotation is < 'A', use remained and addition to bring it back into A-Z range
+                str[x] = ((str[x] - k) % 26) + 78;  //decrypted character = remainder of encrypted character - rotation + 78              
             } 
             
 	    }
 	    
-	    fprintf(output, "%c", str[x]);	    
+	    fprintf(output, "%c", str[x]);	   // printf decrypted character to file
+	    printf("%c", str[x]);              // printt decrypted character to tre
 	}
 	
-	fclose(output);
+	fclose(output);                        // close file
     
     return 0;
 }
 
-int scipherE(){
+int scipherE(){                             
     
-    FILE *key;
-    key = fopen("subKey.txt", "r");
+    FILE *key;                              // open file for key
+    key = fopen("subKey.txt", "r");         // open file subKey.txt
     
-    int x = 0;
-    char str[26];
-    char c;
+    int x = 0;                              // count variable
+    char str[26];                           // string for key
+    char c;                                 // variable for character
     
-    printf("the key is: ");
-    for (x = 0; x < 26; x++){
+    printf("the key is: ");                 // printf key to terminal
+    for (x = 0; x < 26; x++){               // loop for reading key
         
-        fscanf(key, "%c", &c);
-        str[x] = c;
-        printf("%c", str[x]);
-        
+        fscanf(key, "%c", &c);              // scan key character to c
+        str[x] = c;                         // place c into x position in string
+        printf("%c", str[x]);               // print c to terminal
     }
     
-    fclose(key);
+    fclose(key);                            // close file
     
-    FILE *size;        // to initially find the size the array needs to be
-	                   // store decrypted message in "decryptedMessage.txt" for encrypting
-	size = fopen("decryptedMessage.txt", "r");
+    FILE *size;                            // to initially find the size the array needs to be
+                    	                   // store decrypted message in "decryptedMessage.txt" for encrypting
+	size = fopen("decryptedMessage.txt", "r"); // open file for reading size
 	
-	x = 0;
+	x = 0;                                 // count initally = 0
 	
-	while (feof(size) == 0){    
+	while (feof(size) == 0){               // loop for file size
 	    
-    	fscanf(size, "%c", &c);
+    	fscanf(size, "%c", &c);            // scan file character to c
         
-	    x++;
+	    x++;                               // count x + 1
 	}
-	
-	fclose(size);
+	   
+	fclose(size);                          // close file
 
     FILE *input;        // write the file to an array
     
-	input = fopen("decryptedMessage.txt", "r");
+	input = fopen("decryptedMessage.txt", "r");    // open file for input
 	
-    char str2[x];
-    int s = x-1;
+    char str2[x];                           // second string for input file
+    int s = x-1;                            // s is the last character in string
     x = 0;
     printf("\n");
-    printf("input: ");
-    while (feof(input) == 0){
+    printf("Input Message: ");              // input message to terminal
+    
+    for (x = 0; x < s; x++){                // loop forn printing file to array
 	    
 	    
-    	fscanf(input, "%c", &c);
+    	fscanf(input, "%c", &c);           // scan file character to c
     	
-    	str2[x] = c;
+    	str2[x] = c;                       // position x in string = c
     	
-    	if(str2[x] > 96 && str2[x] < 123){
+    	if(str2[x] > 96 && str2[x] < 123){ // if character is lower case
             
-    	    str2[x] = c - 32;
-            str2[s] = '\0';             
+    	    str2[x] = c - 32;              // ASCII value - 32 will make it upper case
+                        
     	}
     	
-        printf("%c", str2[x]);
-	    x++;
+        printf("%c", str2[x]);             // prints message to terminal
 	}
 	
-	fclose(input);
+	fclose(input);                         // close file
 	
-	int a, b;
+	int a, b;                              // variable for encryption technique
 	
-	printf("\n");
+	printf("\n");                          // new line in terminal
 	
-	FILE *output;
-	output = fopen("encryptedMessage.txt", "w");
+	FILE *output;                          // open file for printing output    
+	output = fopen("encryptedMessage.txt", "w");   // open file
 	
-	printf("output: ");
+	printf("Encrypted Message: ");         // prints encrypted message to terminal
 	
-	for (x = 0; x < s; x++){
+	for (x = 0; x < s; x++){               // loop for encryption
 	    
-	    for(b = 0; b < 26; b++){
+	    for(b = 0; b < 26; b++){           // for the range of the alphabet
 	        
-	        a = b + 65;
+	        a = b + 65;                    // + 65 gets it in the A - Z range
 	        
-	        if (str2[x] == a){
-	            str2[x] = str[b];
-	            break;
+	        if (str2[x] == a){             // if input message character = b + 65
+	            str2[x] = str[b];          // then sub the b position character into the original string
+	            break;                     // break loop
 	        }	        
 	    }
-	    
-	    
-	    printf("%c", str2[x]);
-	    fprintf(output, "%c", str2[x]);
+	    	    
+	    printf("%c", str2[x]);             // prints encrypted message to terminal
+	    fprintf(output, "%c", str2[x]);    // prints encrypted message to file
 	}
 	
-	fclose(output);
+	fclose(output);                        // close file
     
     
     return 0;
@@ -325,88 +331,86 @@ int scipherE(){
 
 int scipherD(){
     
-    FILE *key;
-    key = fopen("subKey.txt", "r");
+    FILE *key;                             // open file for reading key
+    key = fopen("subKey.txt", "r");        // open file
     
-    int x = 0;
-    char str[26];
-    char c;
+    int x = 0;                             // count variable
+    char str[26];                          // string for key    
+    char c;                                // variable for scanning from file    
     
-    printf("the key is: ");
-    for (x = 0; x < 26; x++){
+    printf("the key is: ");                // print key to terminal
+    
+    for (x = 0; x < 26; x++){              // loop for scanning key
         
-        fscanf(key, "%c", &c);
-        str[x] = c;
-        printf("%c", str[x]);
+        fscanf(key, "%c", &c);             // scan key to c
+        str[x] = c;                        // let c = position x of string 
+        printf("%c", str[x]);              // print key to terminal
         
     }
     
-    fclose(key);
+    fclose(key);                           // close file
     
-    FILE *size;        // to initially find the size the array needs to be
-	                   // store decrypted message in "decryptedMessage.txt" for encrypting
-	size = fopen("encryptedMessage.txt", "r");
+    FILE *size;                            // to initially find the size the array needs to be
+	                                       // store decrypted message in "decryptedMessage.txt" for encrypting
+	size = fopen("encryptedMessage.txt", "r"); //open file
 	
-	x = 0;
-	
-	while (feof(size) == 0){    
+	while (feof(size) == 0){               // loop for file size
 	    
-    	fscanf(size, "%c", &c);
+    	fscanf(size, "%c", &c);            // scan file character to c
         
-	    x++;
+	    x++;                               // count
 	}
 	
-	fclose(size);
+	fclose(size);                          // file close
 
-    FILE *input;        // write the file to an array
+    FILE *input;                           // write the file to an array
     
-	input = fopen("encryptedMessage.txt", "r");
+	input = fopen("encryptedMessage.txt", "r");    // file open
 	
-    char str2[x];
-    int s = x-1;
-    x = 0;
-    printf("\n");
-    printf("input: ");
-    while (feof(input) == 0){
+    char str2[x];                          // second string for input
+    int s = x-1;                           // last character in array
+    
+    printf("\n");                          // new line
+    printf("Input Message: ");             // print input message to terminal
+    
+    for (x = 0; x < s; x++){               // loop for putting file into string
 	    
 	    
-    	fscanf(input, "%c", &c);
-    	
-    	str2[x] = c;
-    	str2[s] = '\0';
-    	
-        printf("%c", str2[x]);
+    	fscanf(input, "%c", &c);           // scan file character to c
+    	       
+    	str2[x] = c;                       // let c = position x in string
 
-	    x++;
+        printf("%c", str2[x]);             // print input message to terminal
+
 	}
 	
-	fclose(input);
+	fclose(input);                         // file close
 	
-	int b;
+	int b;                                 // variable for decryption technique
 	
-	printf("\n");
+	printf("\n");                          // new line
 	
-	FILE *output;
-	output = fopen("decryptedMessage.txt", "w");
+	FILE *output;                          // open file for output decrypted message
+	output = fopen("decryptedMessage.txt", "w");   // file open
 	
-	printf("output: ");
+	printf("Decrypted Message: ");         // print decrypted message to terminal
 	
-	for (x = 0; x < s; x++){
+	for (x = 0; x < s; x++){               // loop for printing decryption
 	    
-	    for(b = 0; b < 26; b++){
+	    for(b = 0; b < 26; b++){           // range of alphabet
 	        
-	        if (str[b] == str2[x]){
-	            str2[x] = b + 65;
-	            break;
+	        if (str[b] == str2[x]){        // if position b key character equals string character
+	            str2[x] = b + 65;          // then string character = b + 65
+	            break;                     // break loop
 	        }	        
 	    }
 	    
 	    
-	    printf("%c", str2[x]);
-	    fprintf(output, "%c", str2[x]);
+	    printf("%c", str2[x]);             // print decryption to terminal
+	    fprintf(output, "%c", str2[x]);    // print decryption to file
 	}
 	
-	fclose(output);
+	fclose(output);                        // close file
     
     
     
